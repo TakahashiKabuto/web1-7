@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerControler : MonoBehaviour {
     Rigidbody2D rigid2D;
@@ -18,7 +19,8 @@ public class PlayerControler : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //ジャンプする
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space)&&
+            this.rigid2D.velocity.y == 0)
         {
             this.rigid2D.AddForce(transform.up * this.jumpForce);
         }
@@ -42,5 +44,17 @@ public class PlayerControler : MonoBehaviour {
         }
         //プレイヤの速度に応じてアニメーション速度を変える
         this.animator.speed = speedx / 2.0f;
+
+        //画面買いに出た場合は最初から
+        if(transform.position.y < -10)
+        {
+            SceneManager.LoadScene("GameScene");
+        }
 	}
+    //ゴールに到達
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("ゴール");
+        SceneManager.LoadScene("ClearScene");
+    }
 }
